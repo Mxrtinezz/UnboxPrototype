@@ -13,41 +13,53 @@ and another that detects the Ground layer directly below and turns gravity back 
 Use the Ground Check in the FPSMovement script for this too.
 
 USE RIGIDBODY STUFF!! - Probably make it "Is Kinematic" so it's controlled by script stuff.
+
+
+
+Notes for raycasting!
+
+- ONLY DO RAYCASTING STUFF AFTER TESTING WITH BUTTONS!!
+
+Things to research:
+- How to freeze gravity
+- How to switch axis movement
+- Rigidbodies and how to use them (apparently they dont work well with character controllers)
 */
 
 public class LedgeClimb : MonoBehaviour
 {
-private Ray h_ray = new Ray(); // Define a ray for this check
-private RaycastHit h_rayHit; // Use the RaycastHit type to get an object hit
-private bool h_isHit = false;
+    private Ray h_ray = new Ray(); // Define a ray for this check
+    private RaycastHit h_rayHit; // Use the RaycastHit type to get an object hit
+    private bool h_isHit = false;
 
-public LayerMask h_layerToHit; // Defining a layer that will be detected with our raycast
-public float h_rayLength = 10f; // Length of the ray
+    public LayerMask h_layerToHit; // Defining a layer that will be detected with our raycast
+    public float h_rayLength = 10f; // Length of the ray
 
-public KeyCode h_boundKey; // store the key that executes raycast
-public UnityEvent h_onClick; // store a callback event to some other function
+    public KeyCode h_boundKey; // store the key that executes raycast
+    public UnityEvent h_onClick; // store a callback event to some other function
 
 
-void Update()
-{
-if (Input.GetKeyDown(h_boundKey))
-    CastRay();
-else if (Input.GetKeyUp(h_boundKey))
-    h_isHit = false;
-}
-private void CastRay()
-{
-h_ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-// Creates a ray from the camera at the X & Y point of the mouse position
-// Only really gets the direction of the ray - 'point to' <thing>
-// Raycast function returns a boolean - returns an object hit to g_hitObject 
-if (Physics.Raycast(h_ray, out h_rayHit, h_rayLength, h_layerToHit))
-{
-    if (h_isHit == false)
+    void Update()
     {
-        h_onClick?.Invoke(); // if not not - run the function that the event is pointing to
-        h_isHit = true;
+        if (Input.GetKeyDown(h_boundKey))
+            CastRay();
+        else if (Input.GetKeyUp(h_boundKey))
+            h_isHit = false;
     }
-}
-}
+    private void CastRay()
+    {
+        h_ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        // Creates a ray from the camera at the X & Y point of the mouse position
+        // Only really gets the direction of the ray - 'point to' <thing>
+        // Raycast function returns a boolean - returns an object hit to g_hitObject 
+        
+        if (Physics.Raycast(h_ray, out h_rayHit, h_rayLength, h_layerToHit))
+        {
+            if (h_isHit == false)
+            {
+                h_onClick?.Invoke(); // if not not - run the function that the event is pointing to
+                h_isHit = true;
+            }
+        }
+    }
 }

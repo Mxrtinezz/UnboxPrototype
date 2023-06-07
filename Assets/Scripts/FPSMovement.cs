@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-// This class will allow the GameObject to move based on CharacterController 
+// This class will allow the Player's GameObject to move based on CharacterController 
 public class FPSMovement : MonoBehaviour
 
 {
-    public KeyCode m_forward;
-    public KeyCode m_back;
-    public KeyCode m_left;
-    public KeyCode m_right;
+    public KeyCode m_forward; // W
+    public KeyCode m_back; // S
+    public KeyCode m_left; // A
+    public KeyCode m_right; // D
     
     public UnityEngine.CharacterController m_charControler;
     public float m_movementSpeed = 12f;
@@ -27,6 +27,7 @@ public class FPSMovement : MonoBehaviour
     public Transform m_groundCheckPoint;
     public float m_groundDistance = 0.4f;
     public LayerMask m_groundMask;
+
     private bool m_isGrounded;
     public KeyCode m_jump;
 
@@ -41,7 +42,7 @@ public class FPSMovement : MonoBehaviour
     // Update is called once per frame 
     void Update()
     {
-        m_isGrounded = HitGroundCheck(); // CHecks touching the ground every frame
+        m_isGrounded = HitGroundCheck(); // Checks touching the ground every frame
         MoveInputCheck();
     }
 
@@ -89,6 +90,7 @@ public class FPSMovement : MonoBehaviour
         {
             m_finalSpeed = m_movementSpeed * m_runSpeed;
         }
+
         else if (Input.GetKeyUp(m_sprint)) // if key is up, don't sprint
         {
             m_finalSpeed = m_movementSpeed;
@@ -97,11 +99,11 @@ public class FPSMovement : MonoBehaviour
 
     void JumpCheck()
     {
-        if (Input.GetKeyDown(m_jump))
+        if (Input.GetKeyDown(m_jump)) // If the player presses space (make sure this is right in Unity)
         {
-            if (m_isGrounded == true)
+            if (m_isGrounded == true) // If the player is touching the ground
             {
-                m_velocity.y = Mathf.Sqrt(m_jumpHeight * -2f * m_gravity);
+                m_velocity.y = Mathf.Sqrt(m_jumpHeight * -2f * m_gravity); // Defines the jump and how high the player can jump
             }
         }
     }
@@ -110,7 +112,7 @@ public class FPSMovement : MonoBehaviour
     {
         bool isGrounded = Physics.CheckSphere(m_groundCheckPoint.position, m_groundDistance, m_groundMask);
 
-        //Gravity
+        // Gravity
         if (isGrounded && m_velocity.y < 0)
         {
             m_velocity.y = -4f;
