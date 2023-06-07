@@ -56,6 +56,20 @@ public class FPSMovement : MonoBehaviour
         {
             move = transform.right * x + transform.forward * z; // calculate the move vector (direction)
         }
+        
+        
+        /* 
+         Look into different STATES, if the raycast detects a ledge wall, change "transform.forward (z axis)" to "transform.up (y axis)"
+         make a thing that allows a button press to activate the "ledge wall mode", basically switching the player to moving across the Y axis
+
+        Make 2 Ground related raycasts - one that goes diagonally forward and detects the Ground layer, allowing the player to move forward
+        and another that detects the Ground layer directly below and turns gravity back on again.
+
+        Use the Ground Check in this script for this too.
+
+        USE RIGIDBODY STUFF!!
+        */
+
 
         MovePlayer(move); // Run the MovePlayer function with the vector3 value move 
         RunCheck(); // Checks the input for run 
