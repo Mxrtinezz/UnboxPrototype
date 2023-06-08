@@ -1220,14 +1220,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4f32d2c6a5e20944a421d70f718ea76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  h_layerToHit:
-    serializedVersion: 2
-    m_Bits: 64
-  h_rayLength: 10
-  h_boundKey: 102
-  h_onClick:
-    m_PersistentCalls:
-      m_Calls: []
+  player: {fileID: 5412165964566532286}
 --- !u!4 &5412165964975524751
 Transform:
   m_ObjectHideFlags: 0

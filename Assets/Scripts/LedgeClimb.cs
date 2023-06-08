@@ -31,7 +31,26 @@ Things to research:
 
 public class LedgeClimb : MonoBehaviour
 {
-    
+    public GameObject player;
+
+    private void Start()
+    {
+        if (player == null) // If Player is not assigned in Inspector, find it based on Player Tag
+        {
+            player = GameObject.FindGameObjectWithTag("Player");
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        player.transform.parent = transform; 
+    }
+
+
+
+
+
+    /*
     private Ray h_ray = new Ray(); // Define a ray for this check
     private RaycastHit h_rayHit; // Use the RaycastHit type to get an object hit
     private bool h_isHit = false;
@@ -67,7 +86,8 @@ public class LedgeClimb : MonoBehaviour
             }
         }
     }
-    
+    */
+
 
 
 
@@ -84,4 +104,5 @@ public class LedgeClimb : MonoBehaviour
         }
     }
     */
+
 }
