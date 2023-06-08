@@ -24,10 +24,14 @@ Things to research:
 - How to freeze gravity
 - How to switch axis movement
 - Rigidbodies and how to use them (apparently they dont work well with character controllers)
+- Game states
 */
+
+
 
 public class LedgeClimb : MonoBehaviour
 {
+    
     private Ray h_ray = new Ray(); // Define a ray for this check
     private RaycastHit h_rayHit; // Use the RaycastHit type to get an object hit
     private bool h_isHit = false;
@@ -39,6 +43,7 @@ public class LedgeClimb : MonoBehaviour
     public UnityEvent h_onClick; // store a callback event to some other function
 
 
+
     void Update()
     {
         if (Input.GetKeyDown(h_boundKey))
@@ -48,8 +53,8 @@ public class LedgeClimb : MonoBehaviour
     }
     private void CastRay()
     {
-        h_ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        // Creates a ray from the camera at the X & Y point of the mouse position
+        h_ray = Camera.main.ScreenPointToRay(Input.mousePosition); // Creates a ray from the camera at the X & Y point of the mouse position
+        
         // Only really gets the direction of the ray - 'point to' <thing>
         // Raycast function returns a boolean - returns an object hit to g_hitObject 
         
@@ -62,4 +67,21 @@ public class LedgeClimb : MonoBehaviour
             }
         }
     }
+    
+
+
+
+    /*
+    void OnCollisionEnter(Collision CollisionInfo)
+    {
+
+        Debug.Log(CollisionInfo.collider.name);
+
+        if (CollisionInfo.collider.tag == "Obstacle")
+        {
+            movement.enabled = false;
+            GetComponent<Rigidbody>().useGravity = false;
+        }
+    }
+    */
 }
