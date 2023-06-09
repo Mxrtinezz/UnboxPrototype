@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /* 
@@ -12,6 +14,8 @@ and another that detects the Ground layer directly below and turns gravity back 
 Use the Ground Check in this script for this too.
 
 USE RIGIDBODY STUFF!!
+
+The || is an "or"
 */
 
 
@@ -19,17 +23,20 @@ USE RIGIDBODY STUFF!!
 public class FPSMovement : MonoBehaviour
 
 {
+    public static FPSMovement Instance;
+
+
     public KeyCode m_forward; // W
     public KeyCode m_back; // S
     public KeyCode m_left; // A
     public KeyCode m_right; // D
-    public KeyCode m_up; // F
-    
+
+
     public UnityEngine.CharacterController m_charControler;
     public float m_movementSpeed = 12f;
     
     public float m_gravity = -9.81f;
-    private Vector3 m_velocity;
+    private Vector3 m_velocity; // Velocity is fall speed
     
     private float m_finalSpeed = 0;
 
@@ -44,10 +51,22 @@ public class FPSMovement : MonoBehaviour
     private bool m_isGrounded;
     public KeyCode m_jump;
 
+    public bool isClimbing;
+
+    /*
+    private Ray h_ray = new Ray(); // Define a ray for this check
+    private RaycastHit h_rayHit; // Use the RaycastHit type to get an object hit
+    private bool h_isHit = false;
+
+    public LayerMask h_layerToHit; // Defining a layer that will be detected with our raycast
+    public float h_rayLength = 10f; // Length of the ray
+    */
+
 
     // Awake is called before Start 
     void Awake()
     {
+        
         m_finalSpeed = m_movementSpeed;
     }
 
@@ -59,33 +78,53 @@ public class FPSMovement : MonoBehaviour
         MoveInputCheck();
     }
 
-    void MoveInputCheck()
+    public void MoveInputCheck() // EVERYTHING IN HERE IS ABOUT TAKING IN INPUT. THAT'S IT - IT JUST GETS WHAT MOVEMENT TO ADD, BUT DOESN'T APPLY IT UNTIL 'MovePlayer'
     {
         float x = Input.GetAxis("Horizontal"); // Gets the x input value  
         float z = Input.GetAxis("Vertical"); // Gets the z input value  
 
         Vector3 move = Vector3.zero;
 
-        if (Input.GetKey(m_forward) || Input.GetKey(m_back) || Input.GetKey(m_left) || Input.GetKey(m_right))
+        if (isClimbing)
+        {
+            if (Input.GetKey(m_forward)) 
+            {
+                //STUFF HERE ABOVE CLIMBING MOVEMENT
+                move = transform.up * z;
+                m_gravity = 0f;
+                m_velocity.y = 0f;
+            }
+            else if (Input.GetKey(m_back))
+            {
+                isClimbing = false;
+                m_gravity = -9.81f;
+            }
+        }
+        else if (Input.GetKey(m_forward) || Input.GetKey(m_back) || Input.GetKey(m_left) || Input.GetKey(m_right))
         {
             move = transform.right * x + transform.forward * z; // calculate the move vector (direction)
-        }
-        
-        else if (Input.GetKey(m_up))
-        {
-
-        }
+        }        
 
         MovePlayer(move); // Run the MovePlayer function with the vector3 value move 
         RunCheck(); // Checks the input for run 
         JumpCheck(); // Checks if we can jump 
     }
 
+
+
     void MovePlayer(Vector3 move)
     {
         m_charControler.Move(move * m_finalSpeed * Time.deltaTime); // Moves the Gameobject using the Character Controller 
+        
+        // Next two lines are NORMAL movement when not climbing... You need to make two paths here - One with gravity, one without.
         m_velocity.y += m_gravity * Time.deltaTime; // Gravity affects the jump velocity 
         m_charControler.Move(m_velocity * Time.deltaTime); //Actually move the player up 
+
+        if (isClimbing)
+        {
+            move = transform.up;
+            m_charControler.Move(m_velocity * Time.deltaTime); // Actually move the player up
+        }
     }
 
     void RunCheck()
@@ -108,6 +147,8 @@ public class FPSMovement : MonoBehaviour
             if (m_isGrounded == true) // If the player is touching the ground
             {
                 m_velocity.y = Mathf.Sqrt(m_jumpHeight * -2f * m_gravity); // Defines the jump and how high the player can jump
+
+                
             }
         }
     }

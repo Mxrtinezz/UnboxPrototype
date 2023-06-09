@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 227169982}
   - component: {fileID: 227169981}
   - component: {fileID: 227169980}
+  - component: {fileID: 227169984}
   m_Layer: 3
   m_Name: LedgeWall
   m_TagString: Untagged
@@ -220,6 +221,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &227169984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 227169979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4f32d2c6a5e20944a421d70f718ea76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &259459793
 GameObject:
   m_ObjectHideFlags: 0
@@ -1039,7 +1052,7 @@ GameObject:
   - component: {fileID: 2130792986}
   - component: {fileID: 2130792985}
   - component: {fileID: 2130792984}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Step
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1140,7 +1153,6 @@ MonoBehaviour:
   m_back: 115
   m_left: 97
   m_right: 100
-  m_up: 102
   m_charControler: {fileID: 5412165964566532285}
   m_movementSpeed: 12
   m_gravity: -9.81
@@ -1153,6 +1165,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   m_jump: 32
+  isClimbing: 1
 --- !u!4 &5412165964566532284
 Transform:
   m_ObjectHideFlags: 0
@@ -1220,7 +1233,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4f32d2c6a5e20944a421d70f718ea76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 5412165964566532286}
 --- !u!4 &5412165964975524751
 Transform:
   m_ObjectHideFlags: 0

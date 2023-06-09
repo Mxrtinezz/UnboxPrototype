@@ -26,7 +26,7 @@ public class MouseLook : MonoBehaviour
     {
         m_mousePos.x = Input.GetAxis("Mouse X") * m_sensitivity * Time.deltaTime;
         m_mousePos.y = Input.GetAxis("Mouse Y") * m_sensitivity * Time.deltaTime;
-        Debug.Log(m_mousePos);
+        //Debug.Log(m_mousePos);
     }
 
     private void FixXRotation()

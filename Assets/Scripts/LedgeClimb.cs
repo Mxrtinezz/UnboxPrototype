@@ -27,11 +27,12 @@ Things to research:
 - Game states
 */
 
-
+// Ask Dan about variables from other scripts and functions maybe
 
 public class LedgeClimb : MonoBehaviour
-{
-    public GameObject player;
+{    
+    /*
+    public GameObject player;   
 
     private void Start()
     {
@@ -41,14 +42,46 @@ public class LedgeClimb : MonoBehaviour
         }
     }
 
+
+    */
+
+
+
+
+
+
+
+
+    /*
     private void OnTriggerEnter(Collider other)
     {
-        player.transform.parent = transform; 
+        player.transform.parent = transform;
+        player.GetComponent<FPSMovement>();
+        Vector3 move = Vector3.zero;
+
+        if (Input.GetKeyUp(m_up))
+        {
+            //m_gravity = 0;
+            move = transform.up;
+            Debug.Log("Player go climbey");
+        }
     }
+    */
 
 
+    /*
+    else if (Input.GetKey(m_up))
+    {
+        m_gravity = 0;
+        move = transform.up;
 
-
+        if (Input.GetKey(m_down))
+        {
+            move = transform.up * -1;
+            //m_gravity = -9.81;
+        }
+    }
+    */
 
     /*
     private Ray h_ray = new Ray(); // Define a ray for this check
