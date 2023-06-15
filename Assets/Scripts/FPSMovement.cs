@@ -11,11 +11,21 @@ using UnityEngine;
 Make 2 Ground related raycasts - one that goes diagonally forward and detects the Ground layer, allowing the player to move forward
 and another that detects the Ground layer directly below and turns gravity back on again.
 
-Use the Ground Check in this script for this too.
+Use the Ground Check in the FPSMovement script for this too.
 
-USE RIGIDBODY STUFF!!
+USE RIGIDBODY STUFF!! - Probably make it "Is Kinematic" so it's controlled by script stuff.
 
 The || is an "or"
+
+Notes for raycasting!
+
+- ONLY DO RAYCASTING STUFF AFTER TESTING WITH BUTTONS!!
+
+Things to research:
+- How to freeze gravity
+- How to switch axis movement
+- Rigidbodies and how to use them (apparently they dont work well with character controllers)
+- Game states
 */
 
 
@@ -23,8 +33,6 @@ The || is an "or"
 public class FPSMovement : MonoBehaviour
 
 {
-    public static FPSMovement Instance;
-
 
     public KeyCode m_forward; // W
     public KeyCode m_back; // S
@@ -35,7 +43,7 @@ public class FPSMovement : MonoBehaviour
     public UnityEngine.CharacterController m_charControler;
     public float m_movementSpeed = 12f;
     
-    public float m_gravity = -9.81f;
+    public float m_gravity = -9.81f; // Gravity number
     private Vector3 m_velocity; // Velocity is fall speed
     
     private float m_finalSpeed = 0;
@@ -46,27 +54,28 @@ public class FPSMovement : MonoBehaviour
     public float m_jumpHeight = 3f;
     public Transform m_groundCheckPoint;
     public float m_groundDistance = 0.4f;
-    public LayerMask m_groundMask;
+    public LayerMask m_groundMask; // Ground layer
 
     private bool m_isGrounded;
-    public KeyCode m_jump;
+    public KeyCode m_jump; // Space
 
-    public bool isClimbing;
+    public bool isClimbing; // Starts the climbing thing where player goes up Y axis
 
-    /*
+
+
+    // Head Raycast (from camera) - For ledge wall!
     private Ray h_ray = new Ray(); // Define a ray for this check
     private RaycastHit h_rayHit; // Use the RaycastHit type to get an object hit
-    private bool h_isHit = false;
+    public bool h_isHit = false; // Has the layer been hit?
 
     public LayerMask h_layerToHit; // Defining a layer that will be detected with our raycast
-    public float h_rayLength = 10f; // Length of the ray
-    */
+    public float h_rayLength; // Length of the ray
+
 
 
     // Awake is called before Start 
     void Awake()
     {
-        
         m_finalSpeed = m_movementSpeed;
     }
 
@@ -76,6 +85,32 @@ public class FPSMovement : MonoBehaviour
     {
         m_isGrounded = HitGroundCheck(); // Checks touching the ground every frame
         MoveInputCheck();
+
+        if (m_isGrounded == false)
+        {
+            CastRay();
+        }
+    }
+
+    private void CastRay()
+    {
+        h_ray = Camera.main.ScreenPointToRay(Input.mousePosition); // Creates the ray from mouse position. Only gets the direction of the ray (whatever that's supposed to mean)
+        
+        if (Physics.Raycast(h_ray, out h_rayHit, h_rayLength, h_layerToHit)) // Raycast function returns a boolean - returns an object hit to h_rayHit
+        {
+            h_isHit = true;
+            Debug.Log("The ray hit i think maybe");
+
+            if (h_isHit == true)
+            {
+                isClimbing = true;
+            }
+            else
+            {
+                h_isHit = false;
+            }
+        }
+
     }
 
     public void MoveInputCheck() // EVERYTHING IN HERE IS ABOUT TAKING IN INPUT. THAT'S IT - IT JUST GETS WHAT MOVEMENT TO ADD, BUT DOESN'T APPLY IT UNTIL 'MovePlayer'
@@ -85,11 +120,12 @@ public class FPSMovement : MonoBehaviour
 
         Vector3 move = Vector3.zero;
 
-        if (isClimbing)
+
+        if (isClimbing == true)
         {
             if (Input.GetKey(m_forward)) 
             {
-                //STUFF HERE ABOVE CLIMBING MOVEMENT
+                // STUFF HERE ABOVE CLIMBING MOVEMENT
                 move = transform.up * z;
                 m_gravity = 0f;
                 m_velocity.y = 0f;
