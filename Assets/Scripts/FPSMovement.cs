@@ -28,49 +28,47 @@ Things to research:
 - Game states
 */
 
-
 // This class will allow the Player's GameObject to move based on CharacterController 
 public class FPSMovement : MonoBehaviour
-
 {
-
     public KeyCode m_forward; // W
     public KeyCode m_back; // S
     public KeyCode m_left; // A
     public KeyCode m_right; // D
+    public KeyCode m_sprint; // Left Shift
+    public KeyCode m_jump; // Space
 
-
-    public UnityEngine.CharacterController m_charControler;
+    public UnityEngine.CharacterController m_charControler; // Character Controller
     public float m_movementSpeed = 12f;
-    
-    public float m_gravity = -9.81f; // Gravity number
-    private Vector3 m_velocity; // Velocity is fall speed
-    
-    private float m_finalSpeed = 0;
-
     public float m_runSpeed = 1.5f;
-    public KeyCode m_sprint;
-
+    private float m_finalSpeed = 0;
+    public float m_gravity = -9.81f;
+    private Vector3 m_velocity; // Velocity is fall speed
     public float m_jumpHeight = 3f;
+
     public Transform m_groundCheckPoint;
     public float m_groundDistance = 0.4f;
     public LayerMask m_groundMask; // Ground layer
-
-    private bool m_isGrounded;
-    public KeyCode m_jump; // Space
+    private bool m_isGrounded; // Is the player touching the ground?
 
     public bool isClimbing; // Starts the climbing thing where player goes up Y axis
-
-
+    public bool isMounting; // Becomes true when a player is at the top of a ledge wall, allowing the player to walk forward but not fall yet
 
     // Head Raycast (from camera) - For ledge wall!
-    private Ray h_ray = new Ray(); // Define a ray for this check
-    private RaycastHit h_rayHit; // Use the RaycastHit type to get an object hit
-    public bool h_isHit = false; // Has the layer been hit?
+    private Ray h_ray = new Ray(); // Defines ray
+    private RaycastHit h_rayHit; // Get object hit
+    public bool h_isHit = false; // Has the LEDGEWALL layer been hit?
+    public LayerMask h_layerToHit; // Defining the layer that will be detected
+    public float h_rayLength; // Length of ray
 
-    public LayerMask h_layerToHit; // Defining a layer that will be detected with our raycast
-    public float h_rayLength; // Length of the ray
+    // Foot Raycast (from below feet) - for unclimbing at the top of a ledge!
+    private Ray f_ray = new Ray(); // Defines ray
+    private RaycastHit f_rayHit; // Get object hit
+    public bool f_isHit = false; // Has the GROUND layer been hit?
+    public LayerMask f_layerToHit; // Defining the layer that will be detected
+    public float f_rayLength; // Length of ray
 
+    //public static bool Raycast(Vector3 origin, Vector3 direction, float )
 
 
     // Awake is called before Start 
@@ -88,22 +86,28 @@ public class FPSMovement : MonoBehaviour
 
         if (m_isGrounded == false)
         {
-            CastRay();
+            StartClimbRay();
         }
     }
 
-    private void CastRay()
+    private void StartClimbRay()
     {
         h_ray = Camera.main.ScreenPointToRay(Input.mousePosition); // Creates the ray from mouse position. Only gets the direction of the ray (whatever that's supposed to mean)
         
         if (Physics.Raycast(h_ray, out h_rayHit, h_rayLength, h_layerToHit)) // Raycast function returns a boolean - returns an object hit to h_rayHit
         {
             h_isHit = true;
-            Debug.Log("The ray hit i think maybe");
+            Debug.Log("Head ray hit the ledge wall");
 
             if (h_isHit == true)
             {
                 isClimbing = true;
+                Debug.Log("Player starts climbing");
+
+                if (isClimbing == true)
+                {
+                    // foot raycast
+                }
             }
             else
             {
@@ -111,6 +115,17 @@ public class FPSMovement : MonoBehaviour
             }
         }
 
+    }
+
+    private void EndClimbRay()
+    {
+        f_ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(f_ray, out f_rayHit, f_rayLength, f_layerToHit))
+        {
+            f_isHit = true;
+            
+        }
     }
 
     public void MoveInputCheck() // EVERYTHING IN HERE IS ABOUT TAKING IN INPUT. THAT'S IT - IT JUST GETS WHAT MOVEMENT TO ADD, BUT DOESN'T APPLY IT UNTIL 'MovePlayer'
