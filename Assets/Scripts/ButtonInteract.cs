@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Events;
 
 /*
@@ -11,36 +12,58 @@ Change it to make it so that, if it's clicked, it just checks if a function of b
 
 public class ButtonInteract : MonoBehaviour
 {
+    // Raycast setup
+    [Header("Raycast Settings")]
     private Ray b_ray = new Ray(); // Define a ray for this check
     private RaycastHit b_hitObject; // Use the RaycastHit type to get an object hit
     private bool b_isHit = false;
     public LayerMask b_layerToHit; // Defining a layer that will be detected with our raycast
-    public float b_rayLength = 10f; // Length of the ray
+    public float b_rayLength = 5f; // Length of the ray
     public KeyCode b_boundKey; // Left Mouse Button
     public UnityEvent b_onObjectClicked; // store a callback event to some other function
+    public Image CrosshairDot;
+
+    // Raycast Results - For SHOWING bool results, not setting them
+    [Header("Results")]
+    public bool b_didHit;
+    public bool b_canInteract;
+    public GameObject interactiveObject;
+    public bool targetIsInteractive;
+
+    void Start()
+    {
+        b_didHit = false;
+        b_canInteract = false;
+        CrosshairDot = GameObject.Find("CrosshairDot").GetComponent<Image>(); // Finds the CrosshairDot UI object in Unity
+    }
 
     void Update()
     {
-        if (Input.GetKeyDown(b_boundKey))
-            CastRay();
-        else if (Input.GetKeyUp(b_boundKey))
-            b_isHit = false;
-    }
-    private void CastRay()
-    {
-        b_ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        // Creates a ray from the camera at the X & Y point of the mouse position
-        // Only really gets the direction of the ray - 'point to' <thing>
-
-        // Raycast function returns a boolean - returns an object hit to b_hitObject 
-        if (Physics.Raycast(b_ray, out b_hitObject, b_rayLength, b_layerToHit))
+        b_ray = Camera.main.ScreenPointToRay(Input.mousePosition); // Raycast from mouse position
+        if (Physics.Raycast(b_ray, out b_hitObject, b_rayLength, b_layerToHit)) // If raycast hits collider...
         {
-            if (b_isHit == false)
+            if (b_hitObject.collider.tag == "Button") // If that collider has the "Button" tag
             {
-                b_onObjectClicked?.Invoke(); // if not not - run the function that the event is pointing to
-                b_isHit = true;
+                b_didHit = true;
+                interactiveObject = b_hitObject.collider.gameObject;
+                targetIsInteractive = true;
+            }
+            else
+            {
+                b_didHit = false;
+                interactiveObject = null;
+                b_canInteract = false;
             }
         }
+
+        if (b_didHit == true) // Turns crosshair green
+        {
+            CrosshairDot.GetComponent<Renderer>();
+            CrosshairDot.color = Color.green;
+            b_canInteract = true;
+        }
+
+
     }
 
     private void ButtonPress()

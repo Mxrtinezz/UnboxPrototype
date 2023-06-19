@@ -90,7 +90,7 @@ public class FPSMovement : MonoBehaviour
         }
     }
 
-    private void StartClimbRay()
+    private void StartClimbRay() // The raycast that allows the player to start climbing Ledge Walls.
     {
         h_ray = Camera.main.ScreenPointToRay(Input.mousePosition); // Creates the ray from mouse position. Only gets the direction of the ray (whatever that's supposed to mean)
         
@@ -117,7 +117,7 @@ public class FPSMovement : MonoBehaviour
 
     }
 
-    private void EndClimbRay()
+    private void EndClimbRay() // Once the player is at the top of a Ledge Wall, this raycast allows them to walk forward.
     {
         f_ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
