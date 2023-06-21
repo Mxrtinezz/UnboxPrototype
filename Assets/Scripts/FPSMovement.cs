@@ -45,7 +45,7 @@ public class FPSMovement : MonoBehaviour
     public float m_movementSpeed = 12f;
     public float m_runSpeed = 1.5f;
     private float m_finalSpeed = 0;
-    public float m_gravity = -9.81f;
+    public float m_gravity = -9.81f; // Default gravity number
     private Vector3 m_velocity; // Velocity is fall speed
     public float m_jumpHeight = 3f;
 
@@ -70,16 +70,10 @@ public class FPSMovement : MonoBehaviour
     [Header("Foot Raycast")]
     private Ray f_ray = new Ray(); // Defines ray
     private RaycastHit f_rayHit; // Get object hit
-    
-
     public bool f_isHit = false; // Has the GROUND layer been hit?
     public LayerMask f_layerToHit; // Defining the layer that will be detected
-    public float f_rayLength; // Length of ray
-    public Transform f_rayPoint; // The place the foot raycast happens from
-
-    //public static bool Raycast(f_rayPoint, f_rayPoint.forward, out f_rayHit, f_rayLength, f_layerToHit);
-    //Debug.Log("YOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!!!!!!!!!!!!!!!!!!!! It hit!");
-
+    public float f_rayLength; // Length of ray;
+    public Transform f_rayPoint; // The place the foot raycast happens from (transform)
 
     // Awake is called before Start 
     void Awake()
@@ -107,12 +101,12 @@ public class FPSMovement : MonoBehaviour
         if (Physics.Raycast(h_ray, out h_rayHit, h_rayLength, h_layerToHit)) // Raycast function returns a boolean - returns an object hit to h_rayHit
         {
             h_isHit = true;
-            Debug.Log("Head ray hit the ledge wall");
+            //Debug.Log("Head ray hit the ledge wall");
 
             if (h_isHit == true)
             {
                 isClimbing = true;
-                Debug.Log("Player should start climbing");
+                //Debug.Log("Player should start climbing");
 
                 if (isClimbing == true)
                 {
@@ -129,9 +123,9 @@ public class FPSMovement : MonoBehaviour
 
     private void EndClimbRay() // Once the player is at the top of a Ledge Wall, this raycast allows them to walk forward.
     {
-        //f_ray = Camera.main.ScreenPointToRay(f_rayPoint);
+        Debug.DrawRay(f_rayPoint.transform.position, f_rayPoint.transform.forward);
 
-        if (Physics.Raycast(f_rayPoint.position, f_rayPoint.TransformDirection(Vector3.forward), out f_rayHit, f_rayLength, f_layerToHit)) // Raycast function returns a boolean - returns an object hit to f_rayHit
+        if (Physics.Raycast(f_rayPoint.transform.position, f_rayPoint.transform.forward, out f_rayHit, f_rayLength, f_layerToHit))
             {
             f_isHit = true;
             Debug.Log("Foot ray hit ground");
@@ -167,14 +161,15 @@ public class FPSMovement : MonoBehaviour
             if (Input.GetKey(m_forward)) 
             {
                 // STUFF HERE ABOVE CLIMBING MOVEMENT
-                move = transform.up * z;
-                m_gravity = 0f;
+                move = transform.up * z; // Changes W key to move up on Y axis instead of forward
+                m_gravity = 0f; // Freezes gravity
                 m_velocity.y = 0f;
             }
             else if (Input.GetKey(m_back))
             {
-                isClimbing = false;
-                m_gravity = -9.81f;
+                isClimbing = false; // Undoes climb mode
+                h_isHit = false; // Raycast unhits
+                m_gravity = -9.81f; // Gravity reenables
             }
         }
         else if (Input.GetKey(m_forward) || Input.GetKey(m_back) || Input.GetKey(m_left) || Input.GetKey(m_right))
