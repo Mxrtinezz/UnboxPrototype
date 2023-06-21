@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -31,6 +32,7 @@ Things to research:
 // This class will allow the Player's GameObject to move based on CharacterController 
 public class FPSMovement : MonoBehaviour
 {
+    [Header("Controls")]
     public KeyCode m_forward; // W
     public KeyCode m_back; // S
     public KeyCode m_left; // A
@@ -38,6 +40,7 @@ public class FPSMovement : MonoBehaviour
     public KeyCode m_sprint; // Left Shift
     public KeyCode m_jump; // Space
 
+    [Header("Movement and Gravity")]
     public UnityEngine.CharacterController m_charControler; // Character Controller
     public float m_movementSpeed = 12f;
     public float m_runSpeed = 1.5f;
@@ -55,6 +58,7 @@ public class FPSMovement : MonoBehaviour
     public bool isMounting; // Becomes true when a player is at the top of a ledge wall, allowing the player to walk forward but not fall yet
 
     // Head Raycast (from camera) - For ledge wall!
+    [Header("Head Raycast")]
     private Ray h_ray = new Ray(); // Defines ray
     private RaycastHit h_rayHit; // Get object hit
     public bool h_isHit = false; // Has the LEDGEWALL layer been hit?
@@ -62,13 +66,14 @@ public class FPSMovement : MonoBehaviour
     public float h_rayLength; // Length of ray
 
     // Foot Raycast (from below feet) - for unclimbing at the top of a ledge!
+    [Header("Foot Raycast")]
     private Ray f_ray = new Ray(); // Defines ray
     private RaycastHit f_rayHit; // Get object hit
     public bool f_isHit = false; // Has the GROUND layer been hit?
     public LayerMask f_layerToHit; // Defining the layer that will be detected
     public float f_rayLength; // Length of ray
 
-    //public static bool Raycast(Vector3 origin, Vector3 direction, float )
+    //public static bool Raycast(Vector3 origin, Vector3 direction, float maxDistance = Mathf.Infinity, int layerMask = , QueryTriggerInteraction );
 
 
     // Awake is called before Start 
@@ -102,11 +107,11 @@ public class FPSMovement : MonoBehaviour
             if (h_isHit == true)
             {
                 isClimbing = true;
-                Debug.Log("Player starts climbing");
+                Debug.Log("Player should start climbing");
 
                 if (isClimbing == true)
                 {
-                    // foot raycast
+                    EndClimbRay();
                 }
             }
             else
@@ -121,9 +126,26 @@ public class FPSMovement : MonoBehaviour
     {
         f_ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if (Physics.Raycast(f_ray, out f_rayHit, f_rayLength, f_layerToHit))
+        //if (Physics.Raycast(f_ray, out f_rayHit, f_rayLength, f_layerToHit)) // Raycast function returns a boolean - returns an object hit to f_rayHit
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out f_rayHit, Mathf.Infinity, f_layerToHit))
         {
             f_isHit = true;
+            Debug.Log("Foot ray hit ground");
+
+            if (f_isHit == true)
+            {
+                isMounting = true;
+                Debug.Log("Player should start mounting");
+
+                if (isMounting == true)
+                {
+                    isClimbing = false;
+                }
+            }
+            else
+            {
+                f_isHit = false;
+            }
             
         }
     }
@@ -156,6 +178,15 @@ public class FPSMovement : MonoBehaviour
             move = transform.right * x + transform.forward * z; // calculate the move vector (direction)
         }        
 
+        if (isMounting == true)
+        {
+            if (Input.GetKey(m_forward))
+            {
+                // Mounting movement - Should either reenable gravity or allow the player to walk forward
+                move = transform.forward * z;
+            }
+        }
+
         MovePlayer(move); // Run the MovePlayer function with the vector3 value move 
         RunCheck(); // Checks the input for run 
         JumpCheck(); // Checks if we can jump 
@@ -175,6 +206,12 @@ public class FPSMovement : MonoBehaviour
         {
             move = transform.up;
             m_charControler.Move(m_velocity * Time.deltaTime); // Actually move the player up
+        }
+
+        if (isMounting)
+        {
+            move = transform.forward;
+            m_charControler.Move(m_velocity * Time.deltaTime);
         }
     }
 

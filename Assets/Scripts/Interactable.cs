@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class Interactable : MonoBehaviour
 {
-    public ButtonInteract buttonInt;
-    public KeyCode buttonPressKey;
+    public ButtonInteract buttonInt; // References the ButtonInteract script as a whole
+    public KeyCode interactKey; // Meant to reference "b_boundKey" from the ButtonInteract script
+
+    public bool openDoor; // A hack that is basically "tick this box and see if door open". Also used to start door opening function
 
 
 
@@ -13,6 +15,7 @@ public class Interactable : MonoBehaviour
     void Start()
     {
         buttonInt = GetComponent<ButtonInteract>();
+        interactKey = GetComponent<ButtonInteract>().b_boundKey;
     }
 
     // Update is called once per frame
@@ -25,9 +28,9 @@ public class Interactable : MonoBehaviour
     {
         if (buttonInt.GetComponent<ButtonInteract>().b_canInteract == true)
         {
-            if (Input.GetKeyDown(buttonPressKey))
+            if (Input.GetKeyDown(interactKey))
             {
-
+                
             }
         }
     }

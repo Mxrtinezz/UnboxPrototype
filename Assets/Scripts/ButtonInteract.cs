@@ -21,7 +21,7 @@ public class ButtonInteract : MonoBehaviour
     private bool b_isHit = false;
     public LayerMask b_layerToHit; // Defining a layer that will be detected with our raycast
     public float b_rayLength = 5f; // Length of the ray
-    public KeyCode b_boundKey; // Left Mouse Button
+    public KeyCode b_boundKey; // E
     public UnityEvent b_onObjectClicked; // store a callback event to some other function
     public Image CrosshairDot;
 
