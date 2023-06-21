@@ -6,6 +6,7 @@ TagManager:
   tags:
   - LedgeWall
   - Interact
+  - LedgeGround
   layers:
   - Default
   - TransparentFX
@@ -15,7 +16,7 @@ TagManager:
   - UI
   - LedgeWall
   - Interactable
-  - 
+  - LedgeGround
   - 
   - 
   - 

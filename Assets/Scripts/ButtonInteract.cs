@@ -38,6 +38,7 @@ public class ButtonInteract : MonoBehaviour
     public Text intPromptText;
     public string intMessage;
 
+    // Start is called before the frame update
     void Start()
     {
         b_didHit = false;
@@ -45,14 +46,15 @@ public class ButtonInteract : MonoBehaviour
         CrosshairDot = GameObject.Find("CrosshairDot").GetComponent<Image>(); // Finds the CrosshairDot UI object in Unity
     }
 
+    // Update is called once per frame
     void Update()
     {
         b_ray = Camera.main.ScreenPointToRay(Input.mousePosition); // Raycast from mouse position
         if (Physics.Raycast(b_ray, out b_hitObject, b_rayLength, b_layerToHit)) // If raycast hits collider...
         {
-            if (b_hitObject.collider.tag == "Button") // If that collider has the "Button" tag
+            if (b_hitObject.collider.tag == "Interact") // If that collider has the "Interact" tag
             {
-                // This stuff is about firing prompts for something you can interact with in the world (in this case, button)
+                // This stuff is about firing prompts for something you can interact with in the world (in this case, button (interactive object))
                 b_didHit = true;
                 interactiveObject = b_hitObject.collider.gameObject;
                 targetIsInteractive = true;
@@ -65,9 +67,13 @@ public class ButtonInteract : MonoBehaviour
             else // If raycast doesn't hit one of those things, reset raycast and deactivate all prompts
             {
                 b_didHit = false;
-                interactiveObject = null;
-                b_canInteract = false;
+
             }
+        }
+        else
+        {
+            b_didHit = false;
+
         }
 
         if (b_didHit == true) // Turns crosshair green
@@ -84,6 +90,7 @@ public class ButtonInteract : MonoBehaviour
             CrosshairDot.GetComponent<Renderer>();
             CrosshairDot.color = Color.white;
             b_canInteract = false;
+            interactiveObject = null;
         }
 
         // INTERACTIONS - This is where the ACTUAL interactions happen, and result in calling the relative functions
@@ -95,7 +102,5 @@ public class ButtonInteract : MonoBehaviour
                 interactiveObject.GetComponent<Interactable>().ButtonPress(); 
             }
         }
-
-
     }
 }

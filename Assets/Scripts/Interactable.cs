@@ -7,6 +7,7 @@ public class Interactable : MonoBehaviour
     public ButtonInteract buttonInt; // References the ButtonInteract script as a whole
     public KeyCode interactKey; // Meant to reference "b_boundKey" from the ButtonInteract script
 
+    public GameObject doorOne;
     public bool openDoor; // A hack that is basically "tick this box and see if door open". Also used to start door opening function
 
 
@@ -33,5 +34,10 @@ public class Interactable : MonoBehaviour
                 
             }
         }
+    }
+
+    public void DoorOpening()
+    {
+
     }
 }
