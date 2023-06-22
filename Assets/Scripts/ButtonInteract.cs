@@ -6,12 +6,6 @@ using UnityEngine.Events;
 using System;
 using System.Runtime.CompilerServices;
 
-/*
-For buttons, instead of using Event Systems, take the "Interactable" script from zombie game, and make remove the Event thing.
-Change it to make it so that, if it's clicked, it just checks if a function of being clicked is true and if it is, door thing moves.
-*/
-
-
 public class ButtonInteract : MonoBehaviour
 {
     // Raycast Setup Variables
@@ -97,12 +91,6 @@ public class ButtonInteract : MonoBehaviour
         {
             if (targetIsInteractive)
             {
-                //THIS is where you check for the interactKey being pressed! You have 'boundkey' in this one
-                // THEN you run that line you have below here :)
-                
-                //if (b_canInteract)
-
-
                 if (Input.GetKeyDown(b_boundKey))
                 {
                     interactiveObject.GetComponent<Interactable>().ButtonPress();

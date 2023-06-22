@@ -53,9 +53,10 @@ public class FPSMovement : MonoBehaviour
     public Transform m_groundCheckPoint;
     public float m_groundDistance = 0.4f;
     public LayerMask m_groundMask; // Ground layer
-    public LayerMask m_ledgeGroundMask; // LedgeGround layer
+    //public LayerMask m_ledgeGroundMask; // LedgeGround layer
     private bool m_isGrounded; // Is the player touching the ground?
 
+    [Header("Game States")]
     public bool isClimbing; // Starts the climbing thing where player goes up Y axis
     public bool isMounting; // Becomes true when a player is at the top of a ledge wall, allowing the player to walk forward but not fall yet
 
@@ -97,6 +98,8 @@ public class FPSMovement : MonoBehaviour
             // You may want to see if you are in CLIMBING MODE first before you bother calling this.
         }
 
+        
+
         MoveInputCheck(); // You want to know about states before move check
 
 
@@ -110,18 +113,22 @@ public class FPSMovement : MonoBehaviour
         if (Physics.Raycast(h_ray, out h_rayHit, h_rayLength, h_layerToHit)) // Raycast function returns a boolean - returns an object hit to h_rayHit
         {
             h_isHit = true;
-            isClimbing = true;
+            isClimbing = true;           
             //Debug.Log("Climbing should start");
+            Debug.DrawRay(h_rayPoint.transform.position, h_rayPoint.transform.forward, Color.red);
+
 
             EndClimbRay();
         }
-
     }
 
     private void EndClimbRay() // Once the player is at the top of a Ledge Wall, this raycast allows them to walk forward.
     {
         if (isClimbing)
         {
+            h_rayLength = 5f;
+            h_layerToHit = 3;
+
             Ray f_ray = new Ray(f_rayPoint.transform.position, transform.forward * f_rayLength);
             Debug.DrawRay(f_rayPoint.transform.position, f_rayPoint.transform.forward * f_rayLength);
 
@@ -129,6 +136,7 @@ public class FPSMovement : MonoBehaviour
             {
                 f_isHit = true;
                 Debug.Log("Foot ray hit ground");
+                Debug.DrawRay(f_rayPoint.transform.position, f_rayPoint.transform.forward * f_rayLength, Color.red);
 
                 isMounting = true;
             }
@@ -181,7 +189,15 @@ public class FPSMovement : MonoBehaviour
                 move = transform.forward * z;
                 m_gravity = -9.81f;
             }
+            else if (m_isGrounded)
+            {
+                isMounting = false;
+                isClimbing = false;
+                f_isHit = false;                
+            }
         }
+
+
 
         MovePlayer(move); // Run the MovePlayer function with the vector3 value move 
         RunCheck(); // Checks the input for run 
