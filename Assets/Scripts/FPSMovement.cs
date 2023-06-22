@@ -23,8 +23,6 @@ Notes for raycasting!
 - ONLY DO RAYCASTING STUFF AFTER TESTING WITH BUTTONS!!
 
 Things to research:
-- How to freeze gravity
-- How to switch axis movement
 - Rigidbodies and how to use them (apparently they dont work well with character controllers)
 - Game states
 */
@@ -39,6 +37,9 @@ public class FPSMovement : MonoBehaviour
     public KeyCode m_right; // D
     public KeyCode m_sprint; // Left Shift
     public KeyCode m_jump; // Space
+
+    //public KeyCode m_climb; // X
+    //public KeyCode m_mount; // C
 
     [Header("Movement and Gravity")]
     public UnityEngine.CharacterController m_charControler; // Character Controller
@@ -60,6 +61,7 @@ public class FPSMovement : MonoBehaviour
 
     // Head Raycast (from camera) - For ledge wall!
     [Header("Head Raycast")]
+    public Transform h_rayPoint; // Camera position
     private Ray h_ray = new Ray(); // Defines ray
     private RaycastHit h_rayHit; // Get object hit
     public bool h_isHit = false; // Has the LEDGEWALL layer been hit?
@@ -68,12 +70,13 @@ public class FPSMovement : MonoBehaviour
 
     // Foot Raycast (from below feet) - for unclimbing at the top of a ledge!
     [Header("Foot Raycast")]
-    private Ray f_ray = new Ray(); // Defines ray
+    public Transform f_rayPoint; // The place the foot raycast happens from (transform)
+    //private Ray f_ray = new Ray(); // Defines ray
     private RaycastHit f_rayHit; // Get object hit
     public bool f_isHit = false; // Has the GROUND layer been hit?
     public LayerMask f_layerToHit; // Defining the layer that will be detected
     public float f_rayLength; // Length of ray;
-    public Transform f_rayPoint; // The place the foot raycast happens from (transform)
+    
 
     // Awake is called before Start 
     void Awake()
@@ -86,65 +89,49 @@ public class FPSMovement : MonoBehaviour
     void Update()
     {
         m_isGrounded = HitGroundCheck(); // Checks touching the ground every frame
-        MoveInputCheck();
+        
 
         if (m_isGrounded == false)
         {
-            StartClimbRay();
+            StartClimbRay(); // Check to see if there's a wall in front IF I am in the air.
+            // You may want to see if you are in CLIMBING MODE first before you bother calling this.
         }
+
+        MoveInputCheck(); // You want to know about states before move check
+
+
     }
 
     private void StartClimbRay() // The raycast that allows the player to start climbing Ledge Walls.
     {
-        h_ray = Camera.main.ScreenPointToRay(Input.mousePosition); // Creates the ray from mouse position. Only gets the direction of the ray (whatever that's supposed to mean)
+        h_ray = Camera.main.ScreenPointToRay(Input.mousePosition); // Creates the ray from mouse position. Only gets the direction of the ray
+        Debug.DrawRay(h_rayPoint.transform.position, h_rayPoint.transform.forward);
 
         if (Physics.Raycast(h_ray, out h_rayHit, h_rayLength, h_layerToHit)) // Raycast function returns a boolean - returns an object hit to h_rayHit
         {
             h_isHit = true;
-            //Debug.Log("Head ray hit the ledge wall");
+            isClimbing = true;
+            //Debug.Log("Climbing should start");
 
-            if (h_isHit == true)
-            {
-                isClimbing = true;
-                //Debug.Log("Player should start climbing");
-
-                if (isClimbing == true)
-                {
-                    EndClimbRay();
-                }
-            }
-            else
-            {
-                h_isHit = false;
-            }
+            EndClimbRay();
         }
 
     }
 
     private void EndClimbRay() // Once the player is at the top of a Ledge Wall, this raycast allows them to walk forward.
     {
-        Debug.DrawRay(f_rayPoint.transform.position, f_rayPoint.transform.forward);
+        if (isClimbing)
+        {
+            Ray f_ray = new Ray(f_rayPoint.transform.position, transform.forward * f_rayLength);
+            Debug.DrawRay(f_rayPoint.transform.position, f_rayPoint.transform.forward * f_rayLength);
 
-        if (Physics.Raycast(f_rayPoint.transform.position, f_rayPoint.transform.forward, out f_rayHit, f_rayLength, f_layerToHit))
+            if (Physics.Raycast(f_ray, out f_rayHit, f_rayLength, f_layerToHit))
             {
-            f_isHit = true;
-            Debug.Log("Foot ray hit ground");
+                f_isHit = true;
+                Debug.Log("Foot ray hit ground");
 
-            if (f_isHit == true)
-            {
                 isMounting = true;
-                //Debug.Log("Player should start mounting");
-
-                if (isMounting == true)
-                {
-                    isClimbing = false;
-                }
             }
-            else
-            {
-                f_isHit = false;
-            }
-            
         }
     }
 
@@ -155,6 +142,15 @@ public class FPSMovement : MonoBehaviour
 
         Vector3 move = Vector3.zero;
 
+        /*if (Input.GetKeyDown(m_climb))
+        {
+            isClimbing = true;
+        }
+
+        if (Input.GetKeyDown(m_mount))
+        {
+            isMounting = true;
+        }*/
 
         if (isClimbing == true)
         {
@@ -183,6 +179,7 @@ public class FPSMovement : MonoBehaviour
             {
                 // Mounting movement - Should either reenable gravity or allow the player to walk forward
                 move = transform.forward * z;
+                m_gravity = -9.81f;
             }
         }
 

@@ -18,7 +18,7 @@ public class ButtonInteract : MonoBehaviour
     [Header("Raycast Settings")]
     private Ray b_ray = new Ray(); // Define a ray for this check
     private RaycastHit b_hitObject; // Use the RaycastHit type to get an object hit
-    private bool b_isHit = false;
+    //private bool b_isHit = false;
     public LayerMask b_layerToHit; // Defining a layer that will be detected with our raycast
     public float b_rayLength = 5f; // Length of the ray
     public KeyCode b_boundKey; // E
@@ -28,9 +28,9 @@ public class ButtonInteract : MonoBehaviour
     // Raycast Results Variables - For SHOWING bool results, not setting them
     [Header("Results")]
     public bool b_didHit; // Shows if the raycast did actually hit the collider
-    public bool b_canInteract;
-    public GameObject interactiveObject;
-    public bool targetIsInteractive;
+    public bool b_canInteract; // Can the player interact with the object?
+    public GameObject interactiveObject; // The actual button
+    public bool targetIsInteractive; // Is the thing the ray hit an interactive object?
 
     // Prompt System Variables
     [Header("Prompt Options")]
@@ -56,9 +56,9 @@ public class ButtonInteract : MonoBehaviour
             {
                 // This stuff is about firing prompts for something you can interact with in the world (in this case, button (interactive object))
                 b_didHit = true;
-                interactiveObject = b_hitObject.collider.gameObject;
+                interactiveObject = b_hitObject.collider.gameObject; // The interactive object is the button's collider
                 targetIsInteractive = true;
-                if (interactablePromptsText)
+                if (interactablePromptsText == true)
                 {
                     intPromptText.enabled = true;
                     intPromptText.text = intMessage;
@@ -67,13 +67,11 @@ public class ButtonInteract : MonoBehaviour
             else // If raycast doesn't hit one of those things, reset raycast and deactivate all prompts
             {
                 b_didHit = false;
-
             }
         }
         else
         {
             b_didHit = false;
-
         }
 
         if (b_didHit == true) // Turns crosshair green
@@ -81,7 +79,7 @@ public class ButtonInteract : MonoBehaviour
             CrosshairDot.GetComponent<Renderer>();
             CrosshairDot.color = Color.green;
             b_canInteract = true;
-            targetIsInteractive = false;
+            //targetIsInteractive = false;
             intPromptText.enabled = false;
         }
 
@@ -99,7 +97,16 @@ public class ButtonInteract : MonoBehaviour
         {
             if (targetIsInteractive)
             {
-                interactiveObject.GetComponent<Interactable>().ButtonPress(); 
+                //THIS is where you check for the interactKey being pressed! You have 'boundkey' in this one
+                // THEN you run that line you have below here :)
+                
+                //if (b_canInteract)
+
+
+                if (Input.GetKeyDown(b_boundKey))
+                {
+                    interactiveObject.GetComponent<Interactable>().ButtonPress();
+                }               
             }
         }
     }
