@@ -132,6 +132,7 @@ public class FPSMovement : MonoBehaviour
         }
         */
 
+        // Climbing and Mounting section - Mounting seems to work fine in Unity Editor, but less fine in a build, specifically on the table's ledge wall.
         if (isClimbing == true)
         {
             if (Input.GetKey(m_forward)) // This part allows the player to climb up when holding W

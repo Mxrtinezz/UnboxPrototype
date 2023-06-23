@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/UnboxLevel.unity
+    guid: 7ab2675b9be7ffc4193aac310572a2e8
   m_configObjects: {}
