@@ -11,8 +11,7 @@ public class ButtonInteract : MonoBehaviour
     // Raycast Setup Variables
     [Header("Raycast Settings")]
     private Ray b_ray = new Ray(); // Define a ray for this check
-    private RaycastHit b_hitObject; // Use the RaycastHit type to get an object hit
-    //private bool b_isHit = false;
+    private RaycastHit b_hitObject; // Use the RaycastHit type to get an object hit    
     public LayerMask b_layerToHit; // Defining a layer that will be detected with our raycast
     public float b_rayLength = 5f; // Length of the ray
     public KeyCode b_boundKey; // E

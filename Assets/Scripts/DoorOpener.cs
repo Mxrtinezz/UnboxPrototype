@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class DoorOpener : MonoBehaviour
 {
-    public ButtonInteract buttonInt;
-    public Interactable intScript;
-
-    public Renderer doorRend;
-    public Collider doorCollider;
+    public ButtonInteract buttonInt; // The ButtonInteract script as a whole
+    public Interactable intScript; // The Interactable script as a whole
+    public Renderer doorRend; // The door's mesh renderer
+    public Collider doorCollider; // The door's collider
 
     // Start is called before the first frame update
     void Start()
@@ -20,17 +19,11 @@ public class DoorOpener : MonoBehaviour
 
         doorCollider.enabled = true;
         doorRend.enabled = true;
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     public void DoorOpening()
     {
+        // When button is interacted with, the mesh renderer and collider disable
         doorRend.enabled = false;
         doorCollider.enabled = false;
     }
