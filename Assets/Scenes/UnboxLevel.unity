@@ -5148,7 +5148,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   b_rayLength: 5
-  b_boundKey: 101
+  b_boundKey: 323
   b_onObjectClicked:
     m_PersistentCalls:
       m_Calls:
