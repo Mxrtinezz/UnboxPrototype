@@ -16,9 +16,6 @@ public class FPSMovement : MonoBehaviour
     public KeyCode m_sprint; // Left Shift
     public KeyCode m_jump; // Space
 
-    //public KeyCode m_climb; // X (for hack to test if the problem is the movement or the ray)
-    //public KeyCode m_mount; // C (for hack to test if the problem is the movement or the ray)
-
     [Header("Movement and Gravity")]
     public UnityEngine.CharacterController m_charControler; // Character Controller
     public float m_movementSpeed = 12f;
@@ -119,18 +116,6 @@ public class FPSMovement : MonoBehaviour
         float z = Input.GetAxis("Vertical"); // Gets the z input value  
 
         Vector3 move = Vector3.zero;
-
-        /*
-        if (Input.GetKeyDown(m_climb)) // (for hack to test if the problem is the movement or the ray)
-        {
-            isClimbing = true;
-        }
-
-        if (Input.GetKeyDown(m_mount)) // (for hack to test if the problem is the movement or the ray)
-        {
-            isMounting = true;
-        }
-        */
 
         // Climbing and Mounting section - Mounting seems to work fine in Unity Editor, but less fine in a build, specifically on the table's ledge wall.
         if (isClimbing == true)
