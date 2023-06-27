@@ -4769,7 +4769,7 @@ GameObject:
   - component: {fileID: 2001844908}
   m_Layer: 7
   m_Name: Button1
-  m_TagString: Interact
+  m_TagString: Button
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5149,29 +5149,8 @@ MonoBehaviour:
     m_Bits: 128
   b_rayLength: 5
   b_boundKey: 323
-  b_onObjectClicked:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UnityEngine.Object, UnityEngine
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  CrosshairDot: {fileID: 1445645135}
-  b_didHit: 0
-  b_canInteract: 0
-  interactiveObject: {fileID: 2001844903}
-  targetIsInteractive: 0
-  interactablePromptsText: 1
-  intPromptText: {fileID: 434481870}
-  intMessage: '[E] Press Button'
+  Crosshair: {fileID: 1445645135}
+  buttonObject: {fileID: 2001844903}
 --- !u!4 &5412165964975524751
 Transform:
   m_ObjectHideFlags: 0

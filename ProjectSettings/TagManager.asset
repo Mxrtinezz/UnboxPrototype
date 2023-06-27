@@ -5,8 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - LedgeWall
-  - Interact
   - LedgeGround
+  - Button
   layers:
   - Default
   - TransparentFX
@@ -15,7 +15,7 @@ TagManager:
   - Water
   - UI
   - LedgeWall
-  - Interactable
+  - Button
   - LedgeGround
   - 
   - 
